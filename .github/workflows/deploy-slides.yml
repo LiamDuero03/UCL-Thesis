@@ -15,10 +15,11 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Create Build Directory
-        run: mkdir build
+        run: mkdir -p build
 
-      - name: Copy Images
-        run: cp -r img build/img
+      - name: Copy Images to Build
+        # This safely copies your 'img' folder into the temporary web 'build' folder
+        run: cp -r img build/
 
       - name: Convert Markdown to HTML
         uses: KoharaKazuya/marp-cli-action@v4
@@ -27,6 +28,8 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
+        with:
+          enablement: true # <-- This fixes the "HttpError: Not Found" automatically!
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
