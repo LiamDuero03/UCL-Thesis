@@ -3,254 +3,173 @@ marp: true
 theme: default
 paginate: true
 style: |
-  img {
-    max-height: 360px;
-    display: block;
-    margin: 10px auto;
+  section {
+    font-size: 25px;
   }
+  h1 {
+    font-size: 33px;
+  }
+  .status-done { color: #1a7f37; font-weight: bold; }
+  .status-progress { color: #9a6700; font-weight: bold; }
+  .status-blocked { color: #cf222e; font-weight: bold; }
 ---
 
 # Empirical Evaluation of Domain-Specific and General-Purpose Embedding Models in Telecom
+## Progress Update
 
 **Liam Duero**
 
 * Industry Supervisor: Antonio de Domenico
 * Academic Supervisor: Jagmohan Chauhan
 
-![](img/Granular%20Research%20Proposal%20V2_0.png)
+![height:160px](img/Granular%20Research%20Proposal%20V2_0.png)
 
 ---
 
-# Research Motivations
+# Progress at a Glance
 
-* Complexity of Telecom Data and resulting need for AI-native infrastructure
-* Specificity Gap in General-purpose LLMs
-* Rapidly Evolving technical standards and need to keep up with this pace
+| Workstream | Status |
+| :-- | :-- |
+| **Exp 1** — Ground Truth QA Set | <span class="status-progress">🔵 Pipeline built; generation logic + judges being validated; full run not yet executed</span> |
+| **Exp 2** — Comparative Retrieval Benchmarking | <span class="status-progress">🔵 Ingestion grid running — 60/84 configs complete</span> |
+| **Exp 3** — Domain Specialisation Necessity | <span class="status-blocked">🔴 Not started — no findings yet</span> |
 
-![](img/Granular%20Research%20Proposal%20V2_1.png)
-
----
-
-# Industry Background and Publications
-
-* **Industry background**
-  * 6G visions require AI-native infrastructure where LLMs and specialised RAG systems automate large workload
-  * Shift towards Small Language Models and domain-specific embeddings to reduce GPU costs
-* **Key publications**
-  * Telco-RAG: Navigating the Challenges of Retrieval-Augmented Language Models for Telecommunications
-  * Telco-oRAG: Optimizing Retrieval-augmented Generation for Telecom Queries via Hybrid Retrieval and Neural Routing
-  * TSpec-LLM: An Open-source Dataset for LLM Understanding of 3GPP Specifications
-  * MM-Telco: Benchmarks and Multimodal Large Language Models for Telecom Applications
-
-![](img/Granular%20Research%20Proposal%20V2_2.png)
+* **Exp 1:** the `telco-qna-generation` pipeline is built; still finalising the flow/structure before running it fully — the numbers on Exp 1's slides are projections under consideration, not results
+* **Exp 2:** the non-LLM ingestion grid (`master_grid.py`) is actively running; retrieval scoring against ground truth hasn't started
+* **Exp 3:** blocked on the three open questions — untouched
 
 ---
 
-# Research Objectives
+# Recap: Motivation & Background
 
-* **[Q1]** Determine if a domain-specific embedding model (e.g., Bell-Embedding) is required to achieve technical accuracy in telecom retrieval tasks, or if general-purpose models (e.g., OpenAI) are sufficient
-* **[Q2]** Quantify how retrieval effectiveness is influenced by the interaction between document structure (chunking strategy) and enrichment in the telecom domain
-* **[Q3]** Develop a methodology to automatically generate high-fidelity, grounded test sets from 3GPP documentation
-* **[Q4]** Identify the specific document characteristics (e.g., acronym density, versioning, formulaic complexity) that dictate the necessity of specialized embeddings over general-purpose alternatives.
-* **[Q5]** Meaningfully contribute to the open telco AI initiative and their open platform initiative, by contributing to the engineering of a repeatable RAG pipeline and testing suite
+* AI-native infrastructure for 6G pushes toward domain-specific embeddings, partly to cut GPU cost
+* General-purpose embeddings have a **specificity gap** on telecom's acronyms, versioned specs, formulaic language
+* Standards evolve fast — retrieval needs to keep pace
+* Grounded in Telco-RAG, Telco-oRAG, TSpec-LLM, MM-Telco
 
-![](img/Granular%20Research%20Proposal%20V2_3.png)
+---
+
+# Research Objectives — Current Status
+
+* **[Q1]** Domain-specific vs. general-purpose embeddings? → pending Exp 2 retrieval scoring
+* **[Q2]** How do chunking + enrichment interact? → pending Exp 2 retrieval scoring
+* **[Q3]** Auto-generate grounded test sets → 🔵 pipeline built, structure being finalised, no full run yet
+* **[Q4]** Which document traits require specialised embeddings? → not started (Exp 3)
+* **[Q5]** Contribute to open telco AI initiative → 🔵 ongoing — `telco-qna-generation` and ingestion grid both feed the GSMA Open Telco AI Initiative
 
 ---
 
 # Research Methodology & Structure
 
-* **Exp 1 - Ground Truth model-agnostic QA set:**
-  * Create a high-fidelity telecom benchmark from 3GPP (start with Rel-19) documents for specific comparison requirements
-* **Exp 2 - Comparative Retrieval Benchmarking (parameterise the RAG pipeline):**
-  * Compare Chunking Strategies (Structured, Semantic)
-  * Compare different Enrichment Strategies (Glossary, Metadata)
-  * Compare different embedding models
-* **Exp 3 - Domain Specialisation Necessity:**
-  * Analyse which subdomains require specialised embeddings the most
-  * Expand Comparative benchmark with efficiency metrics
-
-![](img/Granular%20Research%20Proposal%20V2_4.png)
+* **Exp 1 — Ground Truth QA set:** 🔵 pipeline built, being validated
+  * `telco-qna-generation` toolkit generating draft QnA against 3GPP Rel-19
+* **Exp 2 — Comparative Retrieval Benchmarking:** 🔵 ingestion grid running
+  * 84-configuration grid (embedding model × chunking × enrichment) via `master_grid.py`
+* **Exp 3 — Domain Specialisation Necessity:** 🔴 not started
+  * Depends on both Exp 1 (final QA set) and Exp 2 (scoring results)
 
 ---
 
-# Exp 1: Ground Truth QA set
+# Exp 1: Ground Truth QA Set — Scope & Tooling
 
-**Experiment**
-* Create a technical QA dataset from unstructured standards
-* Automate “Judge” validation to filter for technical accuracy and domain relevance
-* Expand existing GSMA pipeline
+**Tool:** `telco-qna-generation` — standalone, installs into TelcoLens for GUI review
 
-**Models**
-* Small model for generation (e.g., gpt-4o-mini)
-* Large model for validation (e.g., gpt-oss-120b)
-
-**Data**
-* TSpec-LLM dataset
-* 3GPP Rel 19
-
-**Results**
-* A validated JSON File containing technical question and answers
-
-![](img/Granular%20Research%20Proposal%20V2_5.png)
+**Corpora supported:** 3GPP, O-RAN, ETSI, ITU-T, GSMA, CAMARA, TM Forum
+**Current focus:** 3GPP Rel-19
 
 ---
 
-# Exp 1: Synthetic Dataset Generation & Technical Validation
+# Exp 1: Generation Pipeline (Blocks)
 
-![](img/Granular%20Research%20Proposal%20V2_6.png)
+1. Sample chunks (stratified / section-boundary)
+2. Generate questions — concurrent LLM calls, mixed formats (open/tf/mc/fill-blank)
+3. Dedup — remove near-identical questions
+4. Validate Answerable — faithfulness pass
+5. Competitor Filter — drop questions answerable by ≥2 chunks (ambiguous)
+6. Single-metric LLM judges — Grounding, Faithfulness, Domain Relevance, Semantic Correctness, Relevance
+7. Empirical Difficulty Jury — drops "too easy" and "unanswerable" questions
+8. Human expert review (Approved / Corrected / Rejected) before merging to canonical eval set
 
----
-
-# Exp 1: Workflow
-
-![](img/Granular%20Research%20Proposal%20V2_7.png)
-
-![](img/Granular%20Research%20Proposal%20V2_8.png)
-
-![](img/Granular%20Research%20Proposal%20V2_9.png)
-
-![](img/Granular%20Research%20Proposal%20V2_10.png)
+*This flow and its judge blocks are still being validated — not yet run end-to-end.*
 
 ---
 
-# Exp 1: Judge Validation Logic
+# Exp 1: Projected Funnel (under consideration, not yet run)
 
-![](img/Granular%20Research%20Proposal%20V2_11.png)
+| Stage | Count |
+| :-- | :-- |
+| Chunks sampled (stratified, RAN1-4/SA1-6/CT1/3/4) | ~600–700 |
+| Raw questions generated | ~1,800–2,000 |
+| After Dedup | ~1,600 |
+| After Validate Answerable | ~1,300 |
+| After Competitor Filter | ~1,150 |
+| After single-metric judges | ~1,000–1,050 |
+| After Empirical Difficulty Jury | **~950–1,000 (projected final)** |
 
----
-
-# Exp 2: Comparative Retrieval Benchmarking
-
-* **Experiment:** Comparison of following independent variables:
-  * Chunking Strategies
-  * Enrichment Strategies
-  * Embedding models
-  * Parameterise any aspect of the RAG pipeline
-
-* **Models:** AT&T's Bell Embedding-xxx, OpenAI models
-* **Data:** Validated QA JSON File from Exp 1, TspecLLM
-* **Results:** Performance metric table centered around NDCG@10 across different sub-domains (Consider Efficiency Metrics)
-
-![](img/Granular%20Research%20Proposal%20V2_12.png)
+*These are planning estimates while the flow structure is finalised — not results.*
 
 ---
 
-# Exp 2: Matrix Overview
+# Exp 2: Comparative Retrieval Benchmarking — the Grid
 
-| | Structured Chunking (Fixed Token Size) | Semantic Chunking |
-| :-: | :-: | :-: |
-| **No Enrichment** | Test 1 | Test 2 |
-| **Glossary Enrichment** | Test 3 | Test 4 |
-| **Metadata Enrichment** | Test 5 | Test 6 |
-| **Glossary + Metadata Enrichment** | Test 7 | Test 8 |
+**Tool:** `master_grid.py` — non-LLM ingestion grid orchestrator, pushes each collection to Hugging Face (`LiamDuero/telcolens-chunks`)
 
-This table will be expanded based on capacity to test different configurations.
-
-**Run this for different Models:**
-* Bell-embedding-xxx
-* text-embedding-3-large
-
-![](img/Granular%20Research%20Proposal%20V2_13.png)
+| Dimension | Options | Count |
+| :-- | :-- | :-: |
+| Embedding models | minilm, mpnet, e5, bge, otel-109m, otel-300m, otel-0.6b | 7 |
+| Chunking strategies | text_baseline, sliding_window_tokens, parent_child, hierarchical_markdown | 4 |
+| Enrichment | none, metadata_tagging, acronym_expansion | 3 |
+| **Total configurations** | | **84** |
 
 ---
 
-# Exp 2: Workflow
+# Exp 2: Ingestion Progress
 
-**Models:**
-* Bell-embedding-xxx
-* text-embedding-3-large
-
-![](img/Granular%20Research%20Proposal%20V2_14.png)
-
-![](img/Granular%20Research%20Proposal%20V2_15.png)
-
-![](img/Granular%20Research%20Proposal%20V2_16.png)
-
-![](img/Granular%20Research%20Proposal%20V2_17.png)
-
-![](img/Granular%20Research%20Proposal%20V2_18.png)
+* **60 / 84 configurations complete** (~71%) — ingestion resumes from run 61 onward
+* Each completed run's vector store is pushed to Hugging Face under `ingestion-grid/{run_name}`
+* Distance metric: cosine; batch size 4096 for GPU throughput
+* Grid halts after 2 consecutive failures in a model family, to avoid burning through a broken config set
+* **Not yet started:** retrieval scoring against ground-truth QA (depends on Exp 1's finalised set)
 
 ---
 
-# Exp 2: Evaluation Metrics & Scoring
+# Exp 3: Planned Approach (once Exp 1 & 2 complete)
 
-**Granular Analysis:** Categorise retrieval performance by **3GPP sub-domains** (RAN, Core Network, Security …) to identify specific niches where specialised embeddings outperform general models.
-
-Current Evaluation Suite contains 5 metrics, to be expanded.
-
-![](img/Granular%20Research%20Proposal%20V2_19.png)
-
----
-
-# Exp 3: Domain Specialisation Necessity
-
-**Models**
-* The winning model configuration from Exp 2 for each subdomain
-
-**Data**
-* The retrieval results and error logs from Exp 2
-
-**Experiment**
-* Determining where and why the specialized model succeeds or fails compared to the general one
-
-**Results**
-* Final verdict on what areas in telecom require specialised embeddings
-* Decision Matrix mapping approach to subdomain
-
-![](img/Granular%20Research%20Proposal%20V2_20.png)
+**Models:** winning configuration from Exp 2, per sub-domain
+**Data:** Exp 2's retrieval results and error logs
+**Experiment:** determine where/why specialised embeddings beat or lose to general-purpose ones
+**Planned results:** verdict on which telecom areas need specialised embeddings, plus a decision matrix by sub-domain
 
 ---
 
-# Exp 3: Workflow
+# Exp 3: Planned Workflow
 
-![](img/Granular%20Research%20Proposal%20V2_21.png)
-
----
-
-# Exp 3: Assessment Approach
-
-![](img/Granular%20Research%20Proposal%20V2_22.png)
+1. Extract errors — isolate queries where the specialised model significantly under/over-performs
+2. Categorise root causes — retrieval ambiguity, version sensitivity, formulaic/numerical queries
+3. Re-test the winning configuration to confirm findings hold
 
 ---
 
-# Exp 3: Current Blockers/Questions
+# Contributions to Science (Academic) — Expected
 
-![](img/Granular%20Research%20Proposal%20V2_23.png)
-
----
-
-# Exp 3: Takeaway
-
-![](img/Granular%20Research%20Proposal%20V2_24.png)
+* Empirical evaluation of domain-specific embeddings
+* Automated benchmarking frameworks and RAG pipelines for 3GPP
+* Evaluation of retrieval granularity for technical standards
+* Quantifying the performance gap: general-purpose vs. domain-specific models
 
 ---
 
-# Contributions to Science (Academic)
+# Impact Statement (Business / Industry) — Expected
 
-* Empirical Evaluation of Domain-specific embeddings
-* Advancement of Automated Benchmarking Frameworks and RAG pipelines for 3GPP
-* Evaluation of Retrieval Granularity for Technical Standards
-* Quantifying the performance gap between general purpose and domain-specific models
-
-![](img/Granular%20Research%20Proposal%20V2_25.png)
-
----
-
-# Impact Statement (Business / Industry)
-
-* **Operational Efficiency and Cost Reduction:**
-  * Proving that specialised embeddings can achieve higher accuracy with smaller models
-* **Risk Mitigation:**
-  * Providing an evidence-based recommendation for model choices and pipelines for decisions grounded in technical standards, mitigating business risk of hallucinated responses
-
-![](img/Granular%20Research%20Proposal%20V2_26.png)
+* **Operational Efficiency & Cost Reduction:** specialised embeddings hitting higher accuracy with smaller models
+* **Risk Mitigation:** evidence-based model/pipeline recommendations grounded in technical standards, reducing hallucination risk
 
 ---
 
 # Next Steps
 
-* Design Ground Truth QA creation pipeline
-* Design Semantic Chunking Strategy
-* Design Glossary Enrichment Strategy
-* Design Metadata Enrichment Strategy
+* Finish validating Exp 1's generation flow and judge blocks; finalise structure
+* Run the full QnA generation pass once structure is finalised
+* Complete the remaining 24 ingestion grid configurations
+* Run Exp 2 retrieval scoring once both the QA set and ingestion grid are ready
+* Resolve the three Exp 3 open questions before starting that analysis
