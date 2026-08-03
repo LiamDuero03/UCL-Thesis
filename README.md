@@ -4,7 +4,7 @@ Status-board for UCL DSML Thesis
 ## Overview
  Progress Tracker: **[View Live Progress Tracker](https://github.com/LiamDuero03/UCL-Thesis/blob/main/Progress.md)**
 
- Live Proposal Slide deck: 🚀 **[View the Live Research Proposal Slides](https://LiamDuero03.github.io/UCL-Thesis/)**
+ Live Proposal Slide deck: **[View the Live Research Proposal Slides](https://LiamDuero03.github.io/UCL-Thesis/)**
  
 
 ### Project Goals
