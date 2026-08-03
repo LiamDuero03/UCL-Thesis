@@ -1,0 +1,40 @@
+name: Deploy Marp Slides to GitHub Pages
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Create Build Directory
+        run: mkdir -p build
+
+      - name: Copy Images to Build
+        run: cp -r img build/
+
+      - name: Convert Markdown to HTML
+        # Using the official Marp command line tool instead of a 3rd party plugin
+        run: npx @marp-team/marp-cli@latest slides.md -o build/index.html --html
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: './build'
+
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
