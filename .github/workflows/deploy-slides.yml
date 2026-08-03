@@ -1,15 +1,19 @@
 name: Deploy Marp Slides to GitHub Pages
+
 on:
   push:
     branches:
       - main
+
+# This block grants the exact permissions GitHub needs to publish the site
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      pages: write
-      id-token: write
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -18,7 +22,6 @@ jobs:
         run: mkdir -p build
 
       - name: Copy Images to Build
-        # This safely copies your 'img' folder into the temporary web 'build' folder
         run: cp -r img build/
 
       - name: Convert Markdown to HTML
@@ -28,8 +31,6 @@ jobs:
 
       - name: Setup Pages
         uses: actions/configure-pages@v4
-        with:
-          enablement: true # <-- This fixes the "HttpError: Not Found" automatically!
 
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
